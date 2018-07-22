@@ -25,8 +25,8 @@ const db = client.db(dbName);
 //    });
 
 db.collection('Users').insertOne({
-  name: 'Antoaneta',
-  age:40,
+  name: 'Jana',
+  age:39,
   location: 'Burgas'
 }, (err, result) => {
   if(err){

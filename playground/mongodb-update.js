@@ -27,18 +27,28 @@ const db = client.db(dbName);
 //    }).then((result) => {
 //      console.log(result);
 //    });
+
+
+/*
+
 // find and store the id:
+// var toUpdate = db.collection('Users').find().toArray().then((docs) => {
+//   return docs = docs[1]._id;
+// }).then((finalId) => {
+//   return JSON.stringify(toUpdate);
+// });
+// console.log(toUpdate);
 
+*/
 
-
-db.collection('Users').findOneAndUpdate({_id:new ObjectID('5b54d492f6a8e521602f18ad')}, {
-  $set: { name: 'Veli'},
-  $inc: {age: 1}
-}, {
-  returnOriginal: false
-}).then((result) => {
-  console.log(result);
-});
+// db.collection('Users').findOneAndUpdate({_id:new ObjectID('5b54d492f6a8e521602f18ad')}, {
+//   $set: { name: 'Veli'},
+//   $inc: {age: 1}
+// }, {
+//   returnOriginal: false
+// }).then((result) => {
+//   console.log(result);
+// });
 
 
 

@@ -34,7 +34,7 @@ db.collection('Users').find(toFind).toArray().then((docs) => {
   console.log('Unable to find any documents', err);
 });
 
-db.collection('Users').find({name: 'Antoaneta'}).count().then((count) => {
+db.collection('Users').find(toFind).count().then((count) => {
   console.log(`Number of documents found: ${count}`);
 }, (err) => {
   console.log(err);

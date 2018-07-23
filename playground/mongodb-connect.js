@@ -14,26 +14,26 @@ MongoClient.connect(url,{ useNewUrlParser: true }, (err, client) => {
 
 const db = client.db(dbName);
 
-// db.collection('Todos').insertOne({
-//     text:'Something to do',
-//     completed: false
-// }, (err, result) => {
-//     if(err) {
-//       return console.log('Unable to insert todo', err);
-//     }
-//     console.log(JSON.stringify(result.ops, undefined, 2));
-//    });
-
-db.collection('Users').insertOne({
-  name: 'Jana',
-  age:39,
-  location: 'Burgas'
+db.collection('Todos').insertOne({
+    text:'Eat lunch',
+    completed: false
 }, (err, result) => {
-  if(err){
-    return console.log('Unable to insert user', err);
-  }
+    if(err) {
+      return console.log('Unable to insert todo', err);
+    }
     console.log(JSON.stringify(result.ops, undefined, 2));
-});
+   });
+
+// db.collection('Users').insertOne({
+//   name: 'Jana',
+//   age:39,
+//   location: 'Burgas'
+// }, (err, result) => {
+//   if(err){
+//     return console.log('Unable to insert user', err);
+//   }
+//     console.log(JSON.stringify(result.ops, undefined, 2));
+// });
 
 client.close();
 });

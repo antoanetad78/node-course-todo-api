@@ -49,7 +49,7 @@ app.get('/todos/:id', (req,res) => {
     if (!todo) {
       return res.status(404).send('Sorry, we cannot find that!');
     }
-    res.send(todo);
+    res.send({todo});
   }).catch((e) => res.status(404).send('<h4>An error occured</h4>'));
 });
 
@@ -66,7 +66,7 @@ app.delete('/todos/:id', (req,res) => {
     if(!todo) {
       return res.status(404).send('<h4>Todo not found!</h4>')
     }
-    res.send(`Removed one todo:<hr> ${todo}`);
+    res.send(`Removed one todo:<hr> ${{todo}}`);
   }).catch((e)=> res.status(400).send('<h4>An error occured</h4>'));
 })
 

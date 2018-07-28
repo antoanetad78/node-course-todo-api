@@ -53,6 +53,23 @@ app.get('/todos/:id', (req,res) => {
   }).catch((e) => res.status(404).send('<h4>An error occured</h4>'));
 });
 
+//findByIdAndRemove
+
+app.delete('/todos/:id', (req,res) => {
+
+  var id = req.params.id;
+
+  if(!ObjectID.isValid) {
+    return res.status(400).send('<h3>Remove failed: Invalid Object ID</h3>')
+  }
+  Todo.findByIdAndRemove(id).then((todo) => {
+    if(!todo) {
+      return res.status(404).send('<h4>Todo not found!</h4>')
+    }
+    res.send(`Removed one todo:<hr> ${todo}`);
+  }).catch((e)=> res.status(400).send('<h4>An error occured</h4>'));
+})
+
 app.listen(port, () => {
   console.log(`Started on ${port}`);
 });

@@ -1,7 +1,8 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-
+const _ = require('lodash');
+const express = require('express');
+const bodyParser = require('body-parser');
 const {ObjectID} = require('mongodb');
+
 var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
@@ -59,7 +60,7 @@ app.delete('/todos/:id', (req,res) => {
 
   var id = req.params.id;
 
-  if(!ObjectID.isValid) {
+  if(!ObjectID.isValid(id)) {
     return res.status(400).send('<h3>Remove failed: Invalid Object ID</h3>')
   }
   Todo.findByIdAndRemove(id).then((todo) => {
@@ -68,7 +69,32 @@ app.delete('/todos/:id', (req,res) => {
     }
     res.send(`Removed one todo:<hr> ${{todo}}`);
   }).catch((e)=> res.status(400).send('<h4>An error occured</h4>'));
-})
+});
+
+app.patch('/todos/:id', (req, res) => {
+    var id = req.params.id;
+    var body = _.pick(req.body, ['text', 'completed']); // _.pick takes an object (request.body in this case - and sends to the var body only the parameters inthe array. The user will see only these params)
+
+    if(!ObjectID.isValid(id)) {
+      return res.status(400).send('<h3>Remove failed: Invalid Object ID</h3>')
+    }
+
+    if(_.isBoolean(body.completed) && body.completed) {
+      body.completedAt = new Date().getTime();
+    } else {
+      body.completed = false;
+      body.completedAt = null
+    }
+
+    Todo.findByIdAndUpdate(id, {$set: body}, {new: true}).then((todo) => {
+      if(!todo) {
+        return res.status(404).send('<h3>Todo not found</h3>');
+      }
+      res.send({todo});
+    }).catch((e) => {
+      res.status(400).send('<h3>Error updating record. Update failed.</h3>');
+    })
+});
 
 app.listen(port, () => {
   console.log(`Started on ${port}`);

@@ -67,7 +67,7 @@ app.delete('/todos/:id', (req,res) => {
     if(!todo) {
       return res.status(404).send('<h4>Todo not found!</h4>')
     }
-    res.send(`Removed one todo:<hr> ${{todo}}`);
+    res.send({todo});
   }).catch((e)=> res.status(400).send('<h4>An error occured</h4>'));
 });
 
@@ -76,7 +76,7 @@ app.patch('/todos/:id', (req, res) => {
     var body = _.pick(req.body, ['text', 'completed']); // _.pick takes an object (request.body in this case - and sends to the var body only the parameters inthe array. The user will see only these params)
 
     if(!ObjectID.isValid(id)) {
-      return res.status(400).send('<h3>Remove failed: Invalid Object ID</h3>')
+      return res.status(400).send('<h3>Invalid Object ID</h3>')
     }
 
     if(_.isBoolean(body.completed) && body.completed) {

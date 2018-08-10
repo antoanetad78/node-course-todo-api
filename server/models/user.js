@@ -53,6 +53,28 @@ UserSchema.methods.generateAuthToken = function () {
   });
 };
 
+UserSchema.statics.findByToken = function (token) {
+  let User = this;
+  let decoded;
+
+  try {
+    decoded = jwt.verify(token, 'abc123')
+  } catch(e) {
+    // return new Promise((resoleve, reject) => {
+    //   reject();
+    // })     the same could be done:
+    return Promise.reject();
+  }
+
+//findOne returnes a promise which is why we return. the chain will be added in server.js
+//when using nested object properties as property, we put them in ''
+  return User.findOne ({
+    '_id': decoded._id,
+    'tokens.token':token,
+    'tokens.access':'auth'
+  })
+
+}
 
 let User = mongoose.model('User', UserSchema);
 

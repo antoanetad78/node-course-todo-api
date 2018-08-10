@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
+const bcrypt = require('bcryptjs');
 
 let UserSchema = new mongoose.Schema({
   email: {
@@ -75,6 +76,23 @@ UserSchema.statics.findByToken = function (token) {
   })
 
 }
+//bcrypt.[whatever] doesn't return a promise. If we want to use async/await, we should wrap bcrypt in a promise
+//for now we use this: 
+UserSchema.pre('save', function(next){
+  let user = this;
+
+  if(user.isModified('password')){
+    bcrypt.genSalt(10, function (err, salt) {
+      bcrypt.hash(user.password, salt, function (err, hash) {
+        user.password = hash;
+        next();
+      });
+    });
+  }else {
+    next();
+  }
+})
+
 
 let User = mongoose.model('User', UserSchema);
 

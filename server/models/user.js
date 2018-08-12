@@ -41,7 +41,7 @@ UserSchema.methods.toJSON = function () {
   return _.pick(userObject, ['_id', 'email']);
 }
 
-//Generates token and returns for the serve.js to use.
+//Generates token and returns for the server.js to use.
 UserSchema.methods.generateAuthToken = function () {
   let user = this;
   let access = 'auth';
@@ -76,8 +76,10 @@ UserSchema.statics.findByToken = function (token) {
   })
 
 }
+
+
 //bcrypt.[whatever] doesn't return a promise. If we want to use async/await, we should wrap bcrypt in a promise
-//for now we use this: 
+//for now we use this:
 UserSchema.pre('save', function(next){
   let user = this;
 
@@ -92,6 +94,27 @@ UserSchema.pre('save', function(next){
     next();
   }
 })
+
+UserSchema.statics.findByCredentials = function(email, password) {
+  let User = this;
+
+  return User.findOne({email}).then((user) => {
+    if(!user){
+      return Promise.reject;
+    }
+
+    return new Promise((resolve, reject) => {
+      bcrypt.compare(password, user.password, (err, res) => {
+        if(res){
+          resolve(user);
+        } else{
+          reject();
+        }
+
+      })
+    })
+  })
+}
 
 
 let User = mongoose.model('User', UserSchema);

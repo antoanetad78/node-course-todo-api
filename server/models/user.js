@@ -54,6 +54,21 @@ UserSchema.methods.generateAuthToken = function () {
   });
 };
 
+//Used for delete token which is the logout of a user
+//an instance method, so is defined with .methods
+UserSchema.methods.removeToken = function (token) {               //the function needs to know which token to delete so function(token)
+  let user = this;
+//return, so we can chain on the promise in server.js
+  return user.update({//we just pass the updates object
+    $pull: { //what we want to pull from. it removes items from an array based on certain criteria.a mongodb method
+      tokens: {//the tokens array. we want to pull any object on the array that has a property token equal to the token passed as an argument:
+        token:token //if the method find that token equals token passed as an arguent, it will remove the entire object that contains that property
+      }
+    }
+  })
+
+}
+
 UserSchema.statics.findByToken = function (token) {
   let User = this;
   let decoded;
@@ -77,7 +92,7 @@ UserSchema.statics.findByToken = function (token) {
 
 }
 
-
+//middleware. A hook pre. on the save(). Pre every save user it cheks of the password is modified and only creates and hashes new password if it is modified
 //bcrypt.[whatever] doesn't return a promise. If we want to use async/await, we should wrap bcrypt in a promise
 //for now we use this:
 UserSchema.pre('save', function(next){
